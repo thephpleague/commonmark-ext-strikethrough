@@ -13,16 +13,28 @@ namespace League\CommonMark\Ext\Strikethrough;
 
 use League\CommonMark\Delimiter\DelimiterInterface;
 use League\CommonMark\Delimiter\Processor\DelimiterProcessorInterface;
+use League\CommonMark\Extension\Strikethrough\StrikethroughDelimiterProcessor as CoreProcessor;
 use League\CommonMark\Inline\Element\AbstractStringContainer;
 
+/**
+ * @deprecated The league/commonmark-ext-strikethrough extension is now deprecated. All functionality has been moved into league/commonmark 1.3+, so use that instead.
+ */
 final class StrikethroughDelimiterProcessor implements DelimiterProcessorInterface
 {
+    private $coreProcessor;
+
+    public function __construct()
+    {
+        @trigger_error(sprintf('league/commonmark-ext-strikethrough is deprecated; use %s from league/commonmark 1.3+ instead', CoreProcessor::class), E_USER_DEPRECATED);
+        $this->coreProcessor = new CoreProcessor();
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getOpeningCharacter(): string
     {
-        return '~';
+        return $this->coreProcessor->getOpeningCharacter();
     }
 
     /**
@@ -30,7 +42,7 @@ final class StrikethroughDelimiterProcessor implements DelimiterProcessorInterfa
      */
     public function getClosingCharacter(): string
     {
-        return '~';
+        return $this->coreProcessor->getClosingCharacter();
     }
 
     /**
@@ -38,7 +50,7 @@ final class StrikethroughDelimiterProcessor implements DelimiterProcessorInterfa
      */
     public function getMinLength(): int
     {
-        return 2;
+        return $this->coreProcessor->getMinLength();
     }
 
     /**
@@ -46,9 +58,7 @@ final class StrikethroughDelimiterProcessor implements DelimiterProcessorInterfa
      */
     public function getDelimiterUse(DelimiterInterface $opener, DelimiterInterface $closer): int
     {
-        $min = \min($opener->getLength(), $closer->getLength());
-
-        return $min >= 2 ? $min : 0;
+        return $this->coreProcessor->getDelimiterUse($opener, $closer);
     }
 
     /**
@@ -56,15 +66,6 @@ final class StrikethroughDelimiterProcessor implements DelimiterProcessorInterfa
      */
     public function process(AbstractStringContainer $opener, AbstractStringContainer $closer, int $delimiterUse)
     {
-        $strikethrough = new Strikethrough();
-
-        $tmp = $opener->next();
-        while ($tmp !== null && $tmp !== $closer) {
-            $next = $tmp->next();
-            $strikethrough->appendChild($tmp);
-            $tmp = $next;
-        }
-
-        $opener->insertAfter($strikethrough);
+        return $this->coreProcessor->process($opener, $closer, $delimiterUse);
     }
 }
