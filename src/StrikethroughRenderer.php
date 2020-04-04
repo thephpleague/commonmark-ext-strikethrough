@@ -12,21 +12,28 @@
 namespace League\CommonMark\Ext\Strikethrough;
 
 use League\CommonMark\ElementRendererInterface;
-use League\CommonMark\HtmlElement;
+use League\CommonMark\Extension\Strikethrough\StrikethroughRenderer as CoreRenderer;
 use League\CommonMark\Inline\Element\AbstractInline;
 use League\CommonMark\Inline\Renderer\InlineRendererInterface;
 
+/**
+ * @deprecated The league/commonmark-ext-strikethrough extension is now deprecated. All functionality has been moved into league/commonmark 1.3+, so use that instead.
+ */
 final class StrikethroughRenderer implements InlineRendererInterface
 {
+    private $coreRenderer;
+
+    public function __construct()
+    {
+        @trigger_error(sprintf('league/commonmark-ext-strikethrough is deprecated; use %s from league/commonmark 1.3+ instead', CoreRenderer::class), E_USER_DEPRECATED);
+        $this->coreRenderer = new CoreRenderer();
+    }
+
     /**
      * {@inheritdoc}
      */
     public function render(AbstractInline $inline, ElementRendererInterface $htmlRenderer)
     {
-        if (!($inline instanceof Strikethrough)) {
-            throw new \InvalidArgumentException('Incompatible inline type: ' . get_class($inline));
-        }
-
-        return new HtmlElement('del', $inline->getData('attributes', []), $htmlRenderer->renderInlines($inline->children()));
+        return $this->coreRenderer->render($inline, $htmlRenderer);
     }
 }

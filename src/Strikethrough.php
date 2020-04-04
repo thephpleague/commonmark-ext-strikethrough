@@ -13,13 +13,21 @@ namespace League\CommonMark\Ext\Strikethrough;
 
 use League\CommonMark\Inline\Element\AbstractInline;
 
-class Strikethrough extends AbstractInline
-{
+@trigger_error('league/commonmark-ext-strikethrough is deprecated; use League\CommonMark\Extension\Strikethrough\Strikethrough from league/commonmark 1.3+ instead', E_USER_DEPRECATED);
+class_alias('League\CommonMark\Extension\Strikethrough\Strikethrough', 'League\CommonMark\Ext\Strikethrough\Strikethrough');
+
+if (false) {
     /**
-     * @return bool
+     * @deprecated The league/commonmark-ext-strikethrough extension is now deprecated. All functionality has been moved into league/commonmark 1.3+, so use that instead.
      */
-    public function isContainer(): bool
+    class Strikethrough extends AbstractInline
     {
-        return true;
+        /**
+         * @return bool
+         */
+        public function isContainer(): bool
+        {
+            return true;
+        }
     }
 }

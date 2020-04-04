@@ -13,12 +13,23 @@ namespace League\CommonMark\Ext\Strikethrough;
 
 use League\CommonMark\ConfigurableEnvironmentInterface;
 use League\CommonMark\Extension\ExtensionInterface;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension as CoreExtension;
 
+/**
+ * @deprecated The league/commonmark-ext-strikethrough extension is now deprecated. All functionality has been moved into league/commonmark 1.3+, so use that instead.
+ */
 final class StrikethroughExtension implements ExtensionInterface
 {
+    private $coreExtension;
+
+    public function __construct()
+    {
+        @trigger_error(sprintf('league/commonmark-ext-strikethrough is deprecated; use %s from league/commonmark 1.3+ instead', CoreExtension::class), E_USER_DEPRECATED);
+        $this->coreExtension = new CoreExtension();
+    }
+
     public function register(ConfigurableEnvironmentInterface $environment)
     {
-        $environment->addDelimiterProcessor(new StrikethroughDelimiterProcessor());
-        $environment->addInlineRenderer(Strikethrough::class, new StrikethroughRenderer());
+        $this->coreExtension->register($environment);
     }
 }
